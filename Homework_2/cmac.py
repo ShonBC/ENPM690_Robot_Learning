@@ -208,4 +208,3 @@ class ContinuousCMAC(CMAC):
             time_delta = end_time - start_time
             return time_delta
 
-# https://github.com/anubhavparas/cmac-cerebellar-model-articulation-controller/blob/master/discrete_cmac.py
