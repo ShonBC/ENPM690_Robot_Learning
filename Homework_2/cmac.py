@@ -130,7 +130,7 @@ class DiscreteCMAC(CMAC):
         prev_err = 0
         current_err = 0
         converged = False
-        start_time = time.clock()
+        start_time = time.time()
         while current_epoch <= epochs and not converged:
             prev_err = current_err
 
@@ -159,7 +159,7 @@ class DiscreteCMAC(CMAC):
             current_epoch = current_epoch + 1
             print(f'Discrete CMAC: \n generalization factor: {self.generalization_factor} \n epoch: {current_epoch} \n error: {current_err} \n accuracy: {accuracy * 100}%')
 
-        end_time = time.clock()
+        end_time = time.time()
         time_delta = end_time - start_time
         return time_delta
 
@@ -296,7 +296,7 @@ class ContinuousCMAC(CMAC):
         current_err = 0
         inputs = np.linspace(min_input, max_input)
         converged = False
-        start_time = time.clock()
+        start_time = time.time()
         while current_epoch <= epochs and not converged:
             prev_err = current_err
 
@@ -325,7 +325,7 @@ class ContinuousCMAC(CMAC):
                 current_epoch = current_epoch + 1
                 print(f'Continuous CMAC: \n generalization factor: {self.generalization_factor} \n epoch: {current_epoch} \n error: {current_err} \n accuracy: {accuracy * 100}%')
 
-        end_time = time.clock()
+        end_time = time.time()
         time_delta = end_time - start_time
         return time_delta
 
