@@ -50,12 +50,13 @@ class DiscreteCMAC(CMAC):
 
         # For each data point (key), determine its association vector index and 
         # assign it to the association map (value)
-        for value in data:
-            association_vec_idx = self.AssocVecIdx(value[0],
+        for i in range(len(data[0])):
+            value = data[0][i]
+            association_vec_idx = self.AssocVecIdx(value,
                                                     num_association_vectors, 
                                                     min_input, 
                                                     max_input)
-            self.association_map[value[0]] = int(math.floor(association_vec_idx)) # Round index down
+            self.association_map[value] = int(math.floor(association_vec_idx)) # Round index down
 
     def CalcError(self, predicted, expected):
         """Calculate the error of the model based of the difference in expected and predicted values.
@@ -93,7 +94,8 @@ class DiscreteCMAC(CMAC):
         if gen_assoc_map:
             self.GenerateAssociationMap(data, min_input, max_input)
 
-        for value in data:
+        for i in range(len(data[0])):
+            value = [data[0][i], data[1][i]]
             weight_idx = self.association_map[value[0]]
 
             # Sum the weights in activated cells
@@ -101,7 +103,7 @@ class DiscreteCMAC(CMAC):
 
             predicted.append(temp_output)
 
-        expected = data[ : , 1]
+        expected = data[:][1]
         err = self.CalcError(predicted, expected)
         accuracy = 1 - err
 
@@ -134,7 +136,8 @@ class DiscreteCMAC(CMAC):
         while current_epoch <= epochs and not converged:
             prev_err = current_err
 
-            for value in data:
+            for i in range(len(data[0])):
+                value = [data[0][i], data[1][i]]
                 # Get index for the beginning of generalization factor window
                 weight_idx = self.association_map[value[0]]
 
@@ -153,11 +156,11 @@ class DiscreteCMAC(CMAC):
             current_err = 1 - accuracy
 
             # Check if the model has congerged
-            if np.abs(prev_err, current_err) < 0.0000001:
+            if np.abs(prev_err - current_err) < 0.0000001:
                 converged = True
                         
             current_epoch = current_epoch + 1
-            print(f'Discrete CMAC: \n generalization factor: {self.generalization_factor} \n epoch: {current_epoch} \n error: {current_err} \n accuracy: {accuracy * 100}%')
+        print(f'Discrete CMAC: \n  Generalization Factor: {self.generalization_factor} \n  Epoch: {current_epoch} \n  Percent Error: {current_err * 100}% \n  Accuracy: {accuracy * 100}%')
 
         end_time = time.time()
         time_delta = end_time - start_time
@@ -165,7 +168,7 @@ class DiscreteCMAC(CMAC):
 
 class ContinuousCMAC(CMAC):
     def __init__(self, generalization_factor, num_weights):
-        CMAC.__init__(generalization_factor, num_weights)
+        CMAC.__init__(self, generalization_factor, num_weights)
     
     def AssocVecIdx(self, input_value, num_association_vectors, min_input, max_input):
         """Determine the association vector index to be assigned in the association map for a given input data point.
@@ -202,19 +205,20 @@ class ContinuousCMAC(CMAC):
 
         # For each data point (key), determine its association vector index and 
         # assign it to the association map (value)
-        for value in data:
-            association_vec_idx = self.AssocVecIdx(value[0],
-                                                    num_association_vectors, 
-                                                    min_input, 
-                                                    max_input)
+        for i in range(len(data[0])):
+            value = data[0][i]
+            association_vec_idx = self.AssocVecIdx(value,
+                                        num_association_vectors, 
+                                        min_input, 
+                                        max_input)
             # Round index up and down
             low_association_vec_idx = int(math.floor(association_vec_idx))
             high_association_vec_idx = int(math.ceil(association_vec_idx))
 
             if low_association_vec_idx != high_association_vec_idx:
-                self.association_map[value[0]] = (low_association_vec_idx, high_association_vec_idx)
+                self.association_map[value] = (low_association_vec_idx, high_association_vec_idx)
             else:
-                self.association_map[value[0]] = (low_association_vec_idx, 0)
+                self.association_map[value] = (low_association_vec_idx, 0)
     
     def CalcError(self, predicted, expected):
         """Calculate the error of the model based of the difference in expected and predicted values.
@@ -253,9 +257,10 @@ class ContinuousCMAC(CMAC):
         if gen_assoc_map:
             self.GenerateAssociationMap(data, min_input, max_input)
 
-        for value in data:
-            low_association_idx = self.association_map[value[0][0]]
-            high_association_idx = self.association_map[value[0][1]]
+        for i in range(len(data[0])):
+            value = [data[0][i], data[1][i]]
+            low_association_idx = self.association_map[value[0]][0]
+            high_association_idx = self.association_map[value[0]][1]
 
             l_shared = np.abs(inputs[low_association_idx] - value[0])
             r_shared = np.abs(inputs[high_association_idx] - value[0])
@@ -268,12 +273,13 @@ class ContinuousCMAC(CMAC):
 
             predicted.append(temp_output)
 
-        err = self.CalcError(predicted, data[ : , 1])
+        expected = data[:][1]
+        err = self.CalcError(predicted, expected)
         accuracy = 1 - err
 
         return predicted, accuracy
 
-    def Train(self, data, min_input, max_input, epochs = 10000, learning_rate = 0.01):
+    def TrainModel(self, data, min_input, max_input, epochs = 10000, learning_rate = 0.01):
         """Train the Continuous CMAC model
 
         Args:
@@ -300,9 +306,10 @@ class ContinuousCMAC(CMAC):
         while current_epoch <= epochs and not converged:
             prev_err = current_err
 
-            for value in data:
-                low_association_idx = self.association_map[value[0][0]]
-                high_association_idx = self.association_map[value[0][1]]
+            for i in range(len(data[0])):
+                value = [data[0][i], data[1][i]]
+                low_association_idx = self.association_map[value[0]][0]
+                high_association_idx = self.association_map[value[0]][1]
 
                 l_shared = np.abs(inputs[low_association_idx] - value[0])
                 r_shared = np.abs(inputs[high_association_idx] - value[0])
@@ -310,20 +317,24 @@ class ContinuousCMAC(CMAC):
                 l_ratio = r_shared / (l_shared + r_shared)
                 r_ratio = l_shared / (l_shared + r_shared)
 
-                output = (l_ratio * np.sum(self.weight_vector[low_association_idx : low_association_idx + self.generalization_factor])) + (r_ratio * np.sum(self.weight_vector[high_association_idx : high_association_idx + self.generalization_factor]))
+                output = (l_ratio * np.sum(self.weight_vector[low_association_idx : low_association_idx + self.generalization_factor])) \
+                     + (r_ratio * np.sum(self.weight_vector[high_association_idx : high_association_idx + self.generalization_factor]))
 
                 err = value[1] - output
                 correction = (learning_rate * err) / self.generalization_factor
 
-                self.weight_vector[low_association_idx : low_association_idx + self.generalization_factor] = [(self.weight_vector(idx) + correction) for idx in range(low_association_idx, low_association_idx + self.generalization_factor)]
-                self.weight_vector[high_association_idx : high_association_idx + self.generalization_factor] = [(self.weight_vector[idx] + correction) for idx in range(high_association_idx, high_association_idx + self.generalization_factor)]
+                self.weight_vector[low_association_idx : low_association_idx + self.generalization_factor] = \
+                    [(self.weight_vector[idx] + correction) for idx in range(low_association_idx, low_association_idx + self.generalization_factor)]
+                self.weight_vector[high_association_idx : high_association_idx + self.generalization_factor] = \
+                    [(self.weight_vector[idx] + correction) for idx in range(high_association_idx, high_association_idx + self.generalization_factor)]
 
                 _, accuracy = self.Predict(data, min_input, max_input, False)
+                current_err = 1 - accuracy
                 if np.abs(prev_err - current_err) < 0.0000001:
                     converged = True
                 
                 current_epoch = current_epoch + 1
-                print(f'Continuous CMAC: \n generalization factor: {self.generalization_factor} \n epoch: {current_epoch} \n error: {current_err} \n accuracy: {accuracy * 100}%')
+        print(f'Continuous CMAC: \n  Generalization Factor: {self.generalization_factor} \n  Epoch: {current_epoch} \n  Percent Error: {current_err * 100}% \n  Accuracy: {accuracy * 100}%')
 
         end_time = time.time()
         time_delta = end_time - start_time
