@@ -86,7 +86,7 @@ class DiscreteCMAC(CMAC):
 
         Returns:
             predicted (list): List of predicted outputs
-            accuracy (float): The percentage of predictions the model was able to correctly determine in decimal.
+            accuracy (float): The percentage of predictions the model was able to correctly determine in decimal
         """
 
         predicted = []
