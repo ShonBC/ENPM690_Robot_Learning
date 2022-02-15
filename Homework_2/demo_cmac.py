@@ -82,14 +82,14 @@ if __name__ == '__main__':
     # func = 'y=x**2'
     # x = np.linspace(0, 20, 100)
     # y = np.square(x)
-    
+
     min_input = np.min(x)
     max_input = np.max(x)
 
     # Split data into train (70) and test (30) subsets
     train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=0.3, random_state=42)
     
-    generalization_factor = 10 
+    generalization_factor = 5 
     num_weights = 35
 
     # Train and Test Discrete CMAC
@@ -107,7 +107,7 @@ if __name__ == '__main__':
     
     ax1.plot(sorted_test_x, d_sorted_predicted_y, 'o-', label='Trained Discrete CMAC Output')
     ax1.legend(loc='best')
-    ax1.set(title='Discrete CMAC Test Results',
+    ax1.set(title=f'Discrete CMAC Test Results With Generalization Factor = {generalization_factor}',
     ylabel='Function Output',
     xlabel='Inputs')
 
@@ -124,7 +124,7 @@ if __name__ == '__main__':
 
     ax2.plot(sorted_test_x, c_sorted_predicted_y, 'o-', label='Trained Continuous CMAC Output')
     ax2.legend(loc='best')
-    ax2.set(title='Continuous CMAC Test Results',
+    ax2.set(title=f'Continuous CMAC Test Results With Generalization Factor = {generalization_factor}',
     ylabel  ='Function Output',
     xlabel='Inputs')
     plt.show()
