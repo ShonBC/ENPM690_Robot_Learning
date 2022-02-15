@@ -23,7 +23,7 @@ def Hw2Q2(train_x, train_y, test_x, test_y, min_input, max_input, generalization
     Returns:
         class: Trained discrete CMAC model
         list: Predicted outputs using the test data inputs
-        float: The percentage of predictions the model was able to correctly determine in decimal
+        float: The percentage of predictions the model was able to correctly determine using the test data in decimal
     """
 
     d_cmac = cmac.DiscreteCMAC(generalization_factor, num_weights)
@@ -55,7 +55,7 @@ def Hw2Q3(train_x, train_y, test_x, test_y, min_input, max_input, generalization
     Returns:
         class: Trained continuous CMAC model
         list: Predicted outputs using the test data inputs
-        float: The percentage of predictions the model was able to correctly determine in decimal
+        float: The percentage of predictions the model was able to correctly determine using the test data in decimal
     """
 
     c_cmac = cmac.ContinuousCMAC(generalization_factor, num_weights)
@@ -81,9 +81,10 @@ if __name__ == '__main__':
     num_weights = 35
 
     # Train and Test Discrete CMAC
-    d_cmac, predicted, accuracy = Hw2Q2(train_x, train_y, test_x, test_y, min_input, max_input, generalization_factor, num_weights)
-
+    d_cmac, d_predicted, d_accuracy = Hw2Q2(train_x, train_y, test_x, test_y, min_input, max_input, generalization_factor, num_weights)
+    print(d_accuracy)
 
 
     # Train and Test Continuous CMAC
-    c_cmac, predicted, accuracy = Hw2Q3(train_x, train_y, test_x, test_y, min_input, max_input, generalization_factor, num_weights)
+    c_cmac, c_predicted, c_accuracy = Hw2Q3(train_x, train_y, test_x, test_y, min_input, max_input, generalization_factor, num_weights)
+    print(c_accuracy)
