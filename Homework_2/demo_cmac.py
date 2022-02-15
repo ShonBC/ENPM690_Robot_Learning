@@ -1,7 +1,8 @@
+from cProfile import label
 import cmac
 import numpy as np
 from sklearn.model_selection import train_test_split
-import matplotlib
+import matplotlib.pyplot as plt
 
 def Hw2Q2(train_x, train_y, test_x, test_y, min_input, max_input, generalization_factor, num_weights):
     """Program a Discrete CMAC and train it on a 1-D function (ref: Albus 1975, Fig. 5) 
@@ -82,9 +83,29 @@ if __name__ == '__main__':
 
     # Train and Test Discrete CMAC
     d_cmac, d_predicted, d_accuracy = Hw2Q2(train_x, train_y, test_x, test_y, min_input, max_input, generalization_factor, num_weights)
-    print(d_accuracy)
 
+    # Plot Discrete CMAC
+    fig1 = plt.figure()
+    ax1 = fig1.add_subplot(111)
+    ax1.plot(x, y, label='Actual Function: y=sin(x)')
+    sorted_test_x = np.sort(test_x)
+    ax1.plot(sorted_test_x, d_predicted, 'o-', label='Trained Discrete CMAC Output')
+    ax1.legend(loc='best')
+    ax1.set(title='Discrete CMAC Test Results',
+    ylabel='Function Output',
+    xlabel='Inputs')
 
     # Train and Test Continuous CMAC
     c_cmac, c_predicted, c_accuracy = Hw2Q3(train_x, train_y, test_x, test_y, min_input, max_input, generalization_factor, num_weights)
-    print(c_accuracy)
+
+    # Plot Continuous CMAC
+    fig2 = plt.figure()
+    ax2 = fig2.add_subplot(111)
+    ax2.plot(x, y, label='Actual Function: y=sin(x)')
+    sorted_test_x = np.sort(test_x)
+    ax2.plot(sorted_test_x, c_predicted, 'o-', label='Trained Continuous CMAC Output')
+    ax2.legend(loc='best')
+    ax2.set(title='Continuous CMAC Test Results',
+    ylabel  ='Function Output',
+    xlabel='Inputs')
+    plt.show()
