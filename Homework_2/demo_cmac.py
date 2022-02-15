@@ -70,8 +70,19 @@ def Hw2Q3(train_x, train_y, test_x, test_y, min_input, max_input, generalization
 if __name__ == '__main__':
     
     # Generate 100 data points and lables
-    x = np.linspace(0, 2 * np.pi, 100)
-    y = np.sin(x)
+
+    # func = 'y=sin(x)'
+    # x = np.linspace(0, 2 * np.pi, 100)
+    # y = np.sin(x)
+
+    func = 'y=x'
+    x = np.linspace(0, 20, 100)
+    y = x
+
+    # func = 'y=x**2'
+    # x = np.linspace(0, 20, 100)
+    # y = np.square(x)
+    
     min_input = np.min(x)
     max_input = np.max(x)
 
@@ -82,28 +93,36 @@ if __name__ == '__main__':
     num_weights = 35
 
     # Train and Test Discrete CMAC
-    d_cmac, d_predicted, d_accuracy = Hw2Q2(train_x, train_y, test_x, test_y, min_input, max_input, generalization_factor, num_weights)
+    d_cmac, d_predicted, d_accuracy = \
+        Hw2Q2(train_x, train_y, test_x, test_y, min_input, max_input, generalization_factor, num_weights)
 
     # Plot Discrete CMAC
     fig1 = plt.figure()
     ax1 = fig1.add_subplot(111)
-    ax1.plot(x, y, label='Actual Function: y=sin(x)')
-    sorted_test_x = np.sort(test_x)
-    ax1.plot(sorted_test_x, d_predicted, 'o-', label='Trained Discrete CMAC Output')
+    ax1.plot(x, y, label=f'Actual Function: {func}')
+
+    idx_list = np.argsort(test_x)
+    sorted_test_x = test_x[idx_list]
+    d_sorted_predicted_y = [d_predicted[idx] for idx in idx_list]
+    
+    ax1.plot(sorted_test_x, d_sorted_predicted_y, 'o-', label='Trained Discrete CMAC Output')
     ax1.legend(loc='best')
     ax1.set(title='Discrete CMAC Test Results',
     ylabel='Function Output',
     xlabel='Inputs')
 
     # Train and Test Continuous CMAC
-    c_cmac, c_predicted, c_accuracy = Hw2Q3(train_x, train_y, test_x, test_y, min_input, max_input, generalization_factor, num_weights)
+    c_cmac, c_predicted, c_accuracy = \
+        Hw2Q3(train_x, train_y, test_x, test_y, min_input, max_input, generalization_factor, num_weights)
 
     # Plot Continuous CMAC
     fig2 = plt.figure()
     ax2 = fig2.add_subplot(111)
-    ax2.plot(x, y, label='Actual Function: y=sin(x)')
-    sorted_test_x = np.sort(test_x)
-    ax2.plot(sorted_test_x, c_predicted, 'o-', label='Trained Continuous CMAC Output')
+    ax2.plot(x, y, label=f'Actual Function: {func}')
+
+    c_sorted_predicted_y = [c_predicted[idx] for idx in idx_list]
+
+    ax2.plot(sorted_test_x, c_sorted_predicted_y, 'o-', label='Trained Continuous CMAC Output')
     ax2.legend(loc='best')
     ax2.set(title='Continuous CMAC Test Results',
     ylabel  ='Function Output',
