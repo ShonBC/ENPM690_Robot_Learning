@@ -2,6 +2,9 @@ import numpy as np
 import math
 import time
 
+import sklearn
+from sklearn.metrics import mean_squared_error
+
 class CMAC:
     def __init__(self, generalization_factor, num_weights):
         self.generalization_factor = generalization_factor
@@ -69,11 +72,12 @@ class DiscreteCMAC(CMAC):
             err_total (float): The percentage of predictions the model was able to correctly determine in decimal.
         """
 
-        err = np.subtract(expected, predicted)
-        sum_err_squared = np.sum(np.power(err, 2))
-        err_total = np.sqrt(sum_err_squared) / len(expected)
+        # err = np.subtract(expected, predicted)
+        # sum_err_squared = np.sum(np.power(err, 2))
+        # err_total = np.sqrt(sum_err_squared) / len(expected)
+        err = mean_squared_error(expected, predicted)
 
-        return err_total
+        return err
 
     def Predict(self, data, min_input, max_input, gen_assoc_map = True):
         """Generate predictions using the CMAC model using input data points
@@ -231,11 +235,12 @@ class ContinuousCMAC(CMAC):
             err_total (float): The percentage of predictions the model was able to correctly determine in decimal.
         """
 
-        err = np.subtract(expected, predicted)
-        sum_err_squared = np.sum(np.power(err, 2))
-        err_total = np.sqrt(sum_err_squared) / len(expected)
+        # err = np.subtract(expected, predicted)
+        # sum_err_squared = np.sum(np.power(err, 2))
+        # err_total = np.sqrt(sum_err_squared) / len(expected)
+        err = mean_squared_error(expected, predicted)
 
-        return err_total
+        return err
 
     def Predict(self, data, min_input, max_input, gen_assoc_map = True):
         """Generate predictions using the Continuous CMAC model using input data points
