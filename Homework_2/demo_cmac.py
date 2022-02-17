@@ -29,11 +29,11 @@ def Hw2Q2(train_x, train_y, test_x, test_y, min_input, max_input, generalization
 
     d_cmac = cmac.DiscreteCMAC(generalization_factor, num_weights)
     data = [train_x, train_y]
-    d_cmac.TrainModel(data, min_input, max_input)
-    
+    time_delta, epochs = d_cmac.TrainModel(data, min_input, max_input)
+
     data = [test_x, test_y]
     predicted, accuracy = d_cmac.Predict(data, min_input, max_input)
-    return d_cmac, predicted, accuracy
+    return d_cmac, predicted, accuracy, epochs
 
 def Hw2Q3(train_x, train_y, test_x, test_y, min_input, max_input, generalization_factor, num_weights):
     """ Program a Continuous CMAC by allowing partial cell overlap, and modifying the 
@@ -61,11 +61,11 @@ def Hw2Q3(train_x, train_y, test_x, test_y, min_input, max_input, generalization
 
     c_cmac = cmac.ContinuousCMAC(generalization_factor, num_weights)
     data = [train_x, train_y]
-    c_cmac.TrainModel(data, min_input, max_input)
+    time_delta, epochs = c_cmac.TrainModel(data, min_input, max_input)
 
     data = [test_x, test_y]
     predicted, accuracy = c_cmac.Predict(data, min_input, max_input)
-    return c_cmac, predicted, accuracy
+    return c_cmac, predicted, accuracy, epochs
 
 if __name__ == '__main__':
     
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     num_weights = 35
 
     # Train and Test Discrete CMAC
-    d_cmac, d_predicted, d_accuracy = \
+    d_cmac, d_predicted, d_accuracy, d_epochs = \
         Hw2Q2(train_x, train_y, test_x, test_y, min_input, max_input, generalization_factor, num_weights)
 
     # Plot Discrete CMAC
@@ -107,12 +107,12 @@ if __name__ == '__main__':
     
     ax1.plot(sorted_test_x, d_sorted_predicted_y, 'o-', label='Trained Discrete CMAC Output')
     ax1.legend(loc='best')
-    ax1.set(title=f'Discrete CMAC Test Results With Generalization Factor = {generalization_factor}',
+    ax1.set(title=f'Discrete CMAC Test Results With Generalization Factor = {generalization_factor} Total Epochs = {d_epochs}',
     ylabel='Function Output',
     xlabel='Inputs')
 
     # Train and Test Continuous CMAC
-    c_cmac, c_predicted, c_accuracy = \
+    c_cmac, c_predicted, c_accuracy, c_epochs = \
         Hw2Q3(train_x, train_y, test_x, test_y, min_input, max_input, generalization_factor, num_weights)
 
     # Plot Continuous CMAC
@@ -124,7 +124,7 @@ if __name__ == '__main__':
 
     ax2.plot(sorted_test_x, c_sorted_predicted_y, 'o-', label='Trained Continuous CMAC Output')
     ax2.legend(loc='best')
-    ax2.set(title=f'Continuous CMAC Test Results With Generalization Factor = {generalization_factor}',
+    ax2.set(title=f'Continuous CMAC Test Results With Generalization Factor = {generalization_factor} Total Epochs = {c_epochs}',
     ylabel  ='Function Output',
     xlabel='Inputs')
     plt.show()
