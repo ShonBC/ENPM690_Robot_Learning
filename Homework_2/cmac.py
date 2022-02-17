@@ -125,6 +125,7 @@ class DiscreteCMAC(CMAC):
 
         Returns:
             time_delta (float): How long the model took to train
+            current_epoch (int): Total epochs for training to converge
         """
         
         # Initialize model parameters
@@ -168,7 +169,7 @@ class DiscreteCMAC(CMAC):
 
         end_time = time.time()
         time_delta = end_time - start_time
-        return time_delta
+        return time_delta, current_epoch
 
 class ContinuousCMAC(CMAC):
     def __init__(self, generalization_factor, num_weights):
@@ -296,6 +297,7 @@ class ContinuousCMAC(CMAC):
 
         Returns:
             time_delta (float): How long the model took to train
+            current_epoch (int): Total epochs for training to converge
         """
 
         self.weight_vector = np.ones(self.num_weights)
@@ -343,5 +345,5 @@ class ContinuousCMAC(CMAC):
 
         end_time = time.time()
         time_delta = end_time - start_time
-        return time_delta
+        return time_delta, current_epoch
 
